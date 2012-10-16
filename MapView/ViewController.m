@@ -77,29 +77,21 @@
  返回值	: N/A
  *********************************************/
 - (MKAnnotationView *)mapView:(MKMapView *)mV viewForAnnotation:(id <MKAnnotation>)annotation{
-    /*
-     定义中用到的标注属性
-     image 标注图片
-     pinColor 颜色//MKPinAnnotationColorRed ,MKPinAnnotationColorGreen,MKPinAnnotationColorPurple
-     canShowCallout／／是否弹出
-     animatesDrop／／落下动画
-     centerOffset／／大头针偏移量
-     annotationView.calloutOffset／／标注偏移量
-     rightCalloutAccessoryView／／右边点击按钮
-     leftCalloutAccessoryView／／左边点击按钮
-     */
+    
+    //详细属性介绍看MKPinAnnotationView
     static NSString *AnnotationIdentifier = @"AnnotationIdentifier";
     MKPinAnnotationView *customPinView = (MKPinAnnotationView *)[mV
                                                                  dequeueReusableAnnotationViewWithIdentifier:AnnotationIdentifier];
     //初始化大头针对象
     if (!customPinView) {
         customPinView = [[[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationIdentifier] autorelease];
-        
+        customPinView.draggable = YES;//设置大头针可以拖动
         customPinView.pinColor = MKPinAnnotationColorPurple;//设置大头针的颜色
+
         customPinView.animatesDrop = YES;                //坠落动画
-        customPinView.canShowCallout = YES;              //显示详情
-        
-        //添加导航按钮
+        customPinView.canShowCallout = YES;              //显示简介详情
+//        customPinView.centerOffset = CGPointMake(10, 10);//设置大头针偏移
+        //添加导航按钮 设置按钮样式
         UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
         [rightButton addTarget:self action:@selector(showDetails:) forControlEvents:UIControlEventTouchUpInside];
         customPinView.rightCalloutAccessoryView = rightButton;
@@ -126,6 +118,7 @@
     //点击大头针时，取出其详情信息
     MKPointAnnotation *currentAnnotation = (MKPointAnnotation *)view.annotation;
     currentPin = currentAnnotation.title;
+    NSLog(@"%@",currentPin);
 }
 //拖动地图，改变地图比例时调用此方法
 /**********************************************
@@ -137,7 +130,7 @@
  *********************************************/
 - (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated
 {
-    
+    NSLog(@" map span changed or map draged");
 }
 - (void)didReceiveMemoryWarning
 {
