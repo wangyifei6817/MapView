@@ -7,7 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MapKit/MapKit.h>
+@interface ViewController : UIViewController<MKMapViewDelegate>{
 
-@interface ViewController : UIViewController
+    MKMapView *myMap;
+    int tagNum;
+    NSString *currentPin;
+}
 
 @end

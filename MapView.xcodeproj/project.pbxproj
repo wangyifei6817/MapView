@@ -23,6 +23,8 @@
 		D978C668162BAA5A008BBE16 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D978C643162BAA5A008BBE16 /* Foundation.framework */; };
 		D978C670162BAA5A008BBE16 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D978C66E162BAA5A008BBE16 /* InfoPlist.strings */; };
 		D978C673162BAA5A008BBE16 /* MapViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D978C672162BAA5A008BBE16 /* MapViewTests.m */; };
+		D978C67D162BAA6F008BBE16 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D978C67C162BAA6F008BBE16 /* MapKit.framework */; };
+		D978C67F162BAA7F008BBE16 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D978C67E162BAA7F008BBE16 /* CoreData.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +60,8 @@
 		D978C66F162BAA5A008BBE16 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D978C671162BAA5A008BBE16 /* MapViewTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapViewTests.h; sourceTree = "<group>"; };
 		D978C672162BAA5A008BBE16 /* MapViewTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MapViewTests.m; sourceTree = "<group>"; };
+		D978C67C162BAA6F008BBE16 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		D978C67E162BAA7F008BBE16 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +69,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D978C67F162BAA7F008BBE16 /* CoreData.framework in Frameworks */,
+				D978C67D162BAA6F008BBE16 /* MapKit.framework in Frameworks */,
 				D978C642162BAA5A008BBE16 /* UIKit.framework in Frameworks */,
 				D978C644162BAA5A008BBE16 /* Foundation.framework in Frameworks */,
 				D978C646162BAA5A008BBE16 /* CoreGraphics.framework in Frameworks */,
@@ -87,6 +93,8 @@
 		D978C632162BAA5A008BBE16 = {
 			isa = PBXGroup;
 			children = (
+				D978C67E162BAA7F008BBE16 /* CoreData.framework */,
+				D978C67C162BAA6F008BBE16 /* MapKit.framework */,
 				D978C647162BAA5A008BBE16 /* MapView */,
 				D978C66B162BAA5A008BBE16 /* MapViewTests */,
 				D978C640162BAA5A008BBE16 /* Frameworks */,
@@ -377,7 +385,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MapView/MapView-Prefix.pch";
 				INFOPLIST_FILE = "MapView/MapView-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -388,7 +398,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MapView/MapView-Prefix.pch";
 				INFOPLIST_FILE = "MapView/MapView-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
