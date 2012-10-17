@@ -19,6 +19,26 @@
     [self.view setBackgroundColor:[UIColor redColor]];
     myMap = [[MKMapView alloc]initWithFrame:self.view.bounds];
     myMap.delegate = self;
+    myMap.showsUserLocation = YES;
+    //loacation
+    
+    CLLocationManager *locationManager = [[CLLocationManager alloc] init];
+    //设置CLLocationManager实例委托和精度
+    [locationManager setDelegate:self];
+    [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
+    //设置距离筛选器，表示至少移动100米才通知委托更新
+    [locationManager setDistanceFilter:100.f];
+    
+    //启动更新请求
+    //    [locationManager startUpdatingLocation];
+    locations = [[NSMutableArray alloc] init];
+    float latitude = 39.8127;    //维度
+    float longitude = 116.2967;  //经度
+    for (int i = 0; i < 10; i++) {
+        
+        [locations addObject:[NSString stringWithFormat:@"%f,%f", latitude + 0.01*(i%3), longitude + 0.01*i]];
+        //            NSLog(@"locations:%i",locations.count);
+    }
     //设置经纬度
     CLLocationCoordinate2D theCoordinate;
     theCoordinate.latitude  = 39.943593;
@@ -37,15 +57,17 @@
     //设置大头针
     MKPointAnnotation *pointAnnotation = [[MKPointAnnotation alloc] init];
     pointAnnotation.coordinate = theCoordinate;
-    [myMap addAnnotation:pointAnnotation];
+//    [myMap addAnnotation:pointAnnotation];
     //设置地图长按时间
     UILongPressGestureRecognizer *lpress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
     lpress.minimumPressDuration = 0.5;//按0.5秒响应longPress方法
     lpress.allowableMovement = 10.0;
     [myMap addGestureRecognizer:lpress];
     [lpress release];
+    [myMap addOverlay:[self makePolylineWithLocations:locations]]; 
     [self.view addSubview:myMap];
     [myMap release];
+
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
 }
@@ -80,15 +102,13 @@
     
     //详细属性介绍看MKPinAnnotationView
     static NSString *AnnotationIdentifier = @"AnnotationIdentifier";
-    MKPinAnnotationView *customPinView = (MKPinAnnotationView *)[mV
-                                                                 dequeueReusableAnnotationViewWithIdentifier:AnnotationIdentifier];
+    MKPinAnnotationView *customPinView = (MKPinAnnotationView *)[mV dequeueReusableAnnotationViewWithIdentifier:AnnotationIdentifier];
     //初始化大头针对象
     if (!customPinView) {
         customPinView = [[[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationIdentifier] autorelease];
         customPinView.draggable = YES;//设置大头针可以拖动
         customPinView.pinColor = MKPinAnnotationColorPurple;//设置大头针的颜色
-
-        customPinView.animatesDrop = YES;                //坠落动画
+        customPinView.animatesDrop = NO;                //坠落动画
         customPinView.canShowCallout = YES;              //显示简介详情
 //        customPinView.centerOffset = CGPointMake(10, 10);//设置大头针偏移
         //添加导航按钮 设置按钮样式
@@ -104,6 +124,14 @@
 - (void)showDetails:(UIButton*)sender
 {
     NSLog(@"showDetails");
+    UIActionSheet * actionSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                              delegate:self
+                                                     cancelButtonTitle:@"取消"
+                                                destructiveButtonTitle:@"添加足迹"
+                                                     otherButtonTitles:@"分享",@"详细",@"删除", nil];
+    [actionSheet setDelegate:self];
+    [actionSheet showInView:self.view];
+    [actionSheet release];
 }
 
 /**********************************************
@@ -131,6 +159,64 @@
 - (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated
 {
     NSLog(@" map span changed or map draged");
+}
+- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState{
+    
+} 
+//根据坐标点生成线路
+- (MKPolyline *)makePolylineWithLocations:(NSMutableArray *)newLocations{
+    MKMapPoint *pointArray = malloc(sizeof(CLLocationCoordinate2D)* newLocations.count);
+    for(int i = 0; i < newLocations.count; i++)
+    {
+        // break the string down even further to latitude and longitude fields.
+        NSString* currentPointString = [newLocations objectAtIndex:i];
+        NSArray* latLonArr = [currentPointString componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@","]];
+        CLLocationDegrees latitude  = [[latLonArr objectAtIndex:0] doubleValue];
+        //        NSLog(@"latitude-> %f", latitude);
+        CLLocationDegrees longitude = [[latLonArr objectAtIndex:1] doubleValue];
+        CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(latitude, longitude);
+        //        NSLog(@"point-> %f", point.x);
+        
+//        if (i == 0 || i == locations.count - 1) {//这里只添加起点和终点作为测试
+            MKPointAnnotation *ann = [[MKPointAnnotation alloc] init];
+            [ann setCoordinate:coordinate];
+            [ann setTitle:[NSString stringWithFormat:@"纬度:%f", latitude]];
+            [ann setSubtitle:[NSString stringWithFormat:@"经度:%f", longitude]];
+            [myMap addAnnotation:ann];
+//        }
+        pointArray[i] = MKMapPointForCoordinate(coordinate);
+    }
+
+    routeLine = [MKPolyline polylineWithPoints:pointArray count:newLocations.count];
+    free(pointArray);
+    return routeLine;
+}
+#pragma mark-
+#pragma CLLocationManager delegate method
+//位置变化后会调用
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation{
+    //可在此处更新用户位置信息
+    //    cloMapView.userLocation
+    NSLog(@"oldLocation:%@", [oldLocation description]);
+    NSLog(@"newLocation:%@", [newLocation description]);
+    NSLog(@"distance:%f", [newLocation distanceFromLocation:oldLocation]);
+    //位置变化添加新位置点
+    [locations addObject:[NSString stringWithFormat:@"%f,%f", newLocation.coordinate.latitude, newLocation.coordinate.longitude]];
+    //删除进线路，更新新轨迹
+    [myMap removeOverlay:routeLine];
+    [myMap addOverlay:[self makePolylineWithLocations:locations]];
+    
+}
+//画线
+- (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id<MKOverlay>)overlay{
+    NSLog(@"return overLayView...");
+    if ([overlay isKindOfClass:[MKPolyline class]]) {
+        MKPolylineView *routeLineView = [[[MKPolylineView alloc] initWithPolyline:routeLine] autorelease];
+        routeLineView.strokeColor = [UIColor blueColor];
+        routeLineView.lineWidth = 3;
+        return routeLineView;
+    }
+    return nil;
 }
 - (void)didReceiveMemoryWarning
 {
