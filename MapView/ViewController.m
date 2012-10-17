@@ -91,6 +91,56 @@
         [pointAnnotation release];
     }
 }
+-(void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState{
+
+    switch (newState) {
+        case MKAnnotationViewDragStateNone:
+            NSLog(@"new state: MKAnnotationViewDragStateNone");
+            break;
+        case MKAnnotationViewDragStateStarting:
+            NSLog(@"new state: MKAnnotationViewDragStateStarting");
+            break;
+        case MKAnnotationViewDragStateDragging:
+            NSLog(@"new state: MKAnnotationViewDragStateDragging");
+            break;
+        case MKAnnotationViewDragStateCanceling:
+            NSLog(@"new state: MKAnnotationViewDragStateCanceling");
+            break;
+        case MKAnnotationViewDragStateEnding:
+            NSLog(@"new state: MKAnnotationViewDragStateEnding");
+            break;
+            
+        default:
+            break;
+    }
+    switch (oldState) {
+        case MKAnnotationViewDragStateNone:
+            NSLog(@"oldState: MKAnnotationViewDragStateNone");
+            break;
+        case MKAnnotationViewDragStateStarting:
+            NSLog(@"oldState: MKAnnotationViewDragStateStarting");
+            break;
+        case MKAnnotationViewDragStateDragging:
+            NSLog(@"oldState: MKAnnotationViewDragStateDragging");
+            break;
+        case MKAnnotationViewDragStateCanceling:
+            NSLog(@"oldState: MKAnnotationViewDragStateCanceling");
+            break;
+        case MKAnnotationViewDragStateEnding:
+            NSLog(@"oldState: MKAnnotationViewDragStateEnding");
+            break;
+            
+        default:
+            break;
+    }
+    //能够获得标注的起始位置
+    MKPointAnnotation *currentAnnotation = (MKPointAnnotation *)view.annotation;
+    currentPin = currentAnnotation.title;
+    NSLog(@"annotationView.annotation %f,%f",currentAnnotation.coordinate.latitude,currentAnnotation.coordinate.longitude);
+    
+}
+
+
 /**********************************************
  函数名称 : viewForAnnotation
  函数描述 : 在地图上加入大头针，及其动画。
@@ -146,6 +196,7 @@
     //点击大头针时，取出其详情信息
     MKPointAnnotation *currentAnnotation = (MKPointAnnotation *)view.annotation;
     currentPin = currentAnnotation.title;
+
     NSLog(@"%@",currentPin);
 }
 //拖动地图，改变地图比例时调用此方法
@@ -160,9 +211,7 @@
 {
     NSLog(@" map span changed or map draged");
 }
-- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState{
-    
-} 
+
 //根据坐标点生成线路
 - (MKPolyline *)makePolylineWithLocations:(NSMutableArray *)newLocations{
     MKMapPoint *pointArray = malloc(sizeof(CLLocationCoordinate2D)* newLocations.count);
@@ -213,7 +262,8 @@
     if ([overlay isKindOfClass:[MKPolyline class]]) {
         MKPolylineView *routeLineView = [[[MKPolylineView alloc] initWithPolyline:routeLine] autorelease];
         routeLineView.strokeColor = [UIColor blueColor];
-        routeLineView.lineWidth = 3;
+        routeLineView.fillColor = [UIColor redColor];
+        routeLineView.lineWidth = 10;
         return routeLineView;
     }
     return nil;

@@ -4,15 +4,28 @@
    version = "1.0">
    <FileBreakpoints>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
+         shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "MapView/ViewController.m"
-         timestampString = "372148144.286334"
+         timestampString = "372155167.874231"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "168"
-         endingLineNumber = "168"
+         startingLineNumber = "217"
+         endingLineNumber = "217"
+         landmarkName = "-makePolylineWithLocations:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "MapView/ViewController.m"
+         timestampString = "372155167.874231"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "240"
+         endingLineNumber = "240"
          landmarkName = "-makePolylineWithLocations:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -21,12 +34,25 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "MapView/ViewController.m"
-         timestampString = "372148385.854959"
+         timestampString = "372155167.874231"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "190"
-         endingLineNumber = "190"
-         landmarkName = "-makePolylineWithLocations:"
+         startingLineNumber = "247"
+         endingLineNumber = "247"
+         landmarkName = "-locationManager:didUpdateToLocation:fromLocation:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "MapView/ViewController.m"
+         timestampString = "372155167.874231"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "139"
+         endingLineNumber = "139"
+         landmarkName = "-mapView:annotationView:didChangeDragState:fromOldState:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>
